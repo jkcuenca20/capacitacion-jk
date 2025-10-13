@@ -1,0 +1,88 @@
+# ----------------------------
+# Namespace
+# ----------------------------
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jkcuenca
+
+---
+
+# ----------------------------
+# Deployment
+# ----------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-deployment
+  namespace: jkcuenca
+  labels:
+    app: mi-app
+    areanegocio: tecnologia
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mi-app
+  template:
+    metadata:
+      labels:
+        app: mi-app
+    spec:
+      containers:
+        - name: contenedor-principal
+          image: forcet22/hola-node:1.0.0
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: mi-configmap
+            - secretRef:
+                name: mi-secret
+
+---
+
+# ----------------------------
+# Service
+# ----------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-servicio
+  namespace: jkcuenca
+spec:
+  selector:
+    app: mi-app
+  ports:
+    - protocol: TCP
+      port: 4000        # Puerto interno del servicio
+      targetPort: 3000  # Puerto del contenedor
+      nodePort: 30080   # si quieres probarlo desde tu navegador
+  type: ClusterIP        #  cambia a LoadBalancer en cloud
+
+---
+
+# ----------------------------
+# ConfigMap
+# ----------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mi-configmap
+  namespace: jkcuenca
+data:
+  DATABASE: "192.168.1.1"
+
+---
+
+# ----------------------------
+# Secret
+# ----------------------------
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mi-secret
+  namespace: jkcuenca
+type: Opaque
+data:
+  PASSWORD: aG9sYQ==  # "hola" en base64
