@@ -16,7 +16,9 @@ rules:
 - apiGroups: ["", "apps", "autoscaling", "batch", "extensions", "networking.k8s.io", "storage.k8s.io"]
   resources: ["configmaps", "endpoints", "events", "ingresses", "persistentvolumeclaims", "pods", "podtemplates", "replicationcontrollers", "resourcequotas", "secrets", "serviceaccounts", "services", "deployments", "daemonsets", "replicasets", "statefulsets", "horizontalpodautoscalers", "cronjobs", "jobs", "networkpolicies", "storageclasses"]
   verbs: ["get", "list", "watch"]
-
+- apiGroups: ["apps"]
+  resources: ["deployments/scale"]
+  verbs: ["*"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -30,4 +32,26 @@ subjects:
 roleRef:
   kind: Role
   name: dashboard-jkcuenca # El rol que creamos
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: global-reader
+rules:
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: jkcuenca-global-readonly-binding
+subjects:
+- kind: ServiceAccount
+  name: jkcuenca-serviceaccount # La cuenta de servicio que creamos
+  namespace: jkcuenca
+roleRef:
+  kind: ClusterRole
+  name: global-reader # El rol que creamos
   apiGroup: rbac.authorization.k8s.io

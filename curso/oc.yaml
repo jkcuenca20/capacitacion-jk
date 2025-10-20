@@ -1,22 +1,8 @@
-# ----------------------------
-# Namespace
-# ----------------------------
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: jkcuenca
-  labels:
-    istio-injection: enabled
----
-# ----------------------------
-# Deployment
-# ----------------------------
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mi-deployment
-  namespace: jkcuenca
+  namespace: jessica-cuenca-dev
   labels:
     app: mi-app
     areanegocio: tecnologia
@@ -52,7 +38,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mi-servicio
-  namespace: jkcuenca  # Asegúrate de que coincida con tu Deployment
+  namespace: jessica-cuenca-dev  # Asegúrate de que coincida con tu Deployment
 spec:
   selector:
     app: mi-app  # Debe coincidir con las labels del Deployment
@@ -66,7 +52,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mi-configmap
-  namespace: jkcuenca
+  namespace: jessica-cuenca-dev
 data:
   DATABASE: "192.168.1.1"
 ---
@@ -74,7 +60,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: mi-secret
-  namespace: jkcuenca
+  namespace: jessica-cuenca-dev
 type: Opaque
 data:
   PASSWORD: aG9sYQ==
@@ -84,7 +70,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: mi-hpa
-  namespace: jkcuenca
+  namespace: jessica-cuenca-dev
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
