@@ -18,7 +18,10 @@ spec:
     spec:
       containers:
         - name: contenedor-principal
-          image: jkcuenca20/hola-mundo-clase123:1  # <-- Reemplaza con la imagen que quieras usar
+          image: jkcuenca20/hola-mundo-clase123:build-{{ tag }}  # <-- Reemplaza con la imagen que quieras usar
+          imagePullPolicy: Always
+          #image: jkcuenca20/hola-mundo-clase123:1  # <-- Reemplaza con la imagen que quieras usar
+          #image: image-registry.openshift-image-registry.svc:5000/jessica-cuenca-dev/ejercicio-codigo-s2i:latest 
           ports:
             - containerPort: 3000
           resources:
