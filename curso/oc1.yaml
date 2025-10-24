@@ -18,8 +18,10 @@ spec:
     spec:
       containers:
         - name: contenedor-principal
-          image: adonispaz9506/hola-mundo-clase123:build-{{ tag }}  # <-- Reemplaza con la imagen que quieras usar
+          image: jkcuenca20/hola-mundo-clase123:build-{{ tag }}  # <-- Reemplaza con la imagen que quieras usar
           imagePullPolicy: Always
+          #image: jkcuenca20/hola-mundo-clase123:1  # <-- Reemplaza con la imagen que quieras usar
+          #image: image-registry.openshift-image-registry.svc:5000/jessica-cuenca-dev/ejercicio-codigo-s2i:latest 
           ports:
             - containerPort: 3000
           resources:
@@ -34,13 +36,6 @@ spec:
                 name: mi-configmap
             - secretRef:
                 name: mi-secret
-          volumeMounts:
-            - name: datos
-              mountPath: "/app/data"
-      volumes:
-        - name: datos
-          persistentVolumeClaim:
-            claimName: mi-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -93,16 +88,3 @@ spec:
       target:
         type: Utilization
         averageUtilization: 100
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mi-pvc
-  namespace: jessica-cuenca-dev
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: gp3
